@@ -1,4 +1,5 @@
 import { mrrToTier, type Tier } from "@/lib/tiers";
+import { RankBadge } from "@/components/TierIcon";
 
 export function TierBadge({
   mrr,
@@ -29,13 +30,13 @@ export function TierChip({
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono uppercase tracking-wider ${compact ? "text-[10px]" : "text-xs"}`}
       style={{
         color: tier.color,
-        borderColor: `${tier.color}66`,
-        background: `${tier.color}1a`,
-        boxShadow: tier.slug === "billionaire_path" ? `0 0 18px ${tier.color}55` : undefined,
+        borderColor: `${tier.color}99`,
+        background: `${tier.color}18`,
       }}
     >
+      <RankBadge tier={tier} size={compact ? 16 : 18} />
       {tier.label}
-      {verified ? <span className="text-[10px] text-sky-300">✓ Verified Legend</span> : null}
+      {verified ? <span className="text-[10px] opacity-80">✓ Verified</span> : null}
     </span>
   );
 }

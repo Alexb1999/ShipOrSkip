@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "api.dicebear.com" },
       { protocol: "https", hostname: "pbs.twimg.com" },
       { protocol: "https", hostname: "abs.twimg.com" },
-      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "unavatar.io" },
+      { protocol: "https", hostname: "images.unavatar.io" },
     ],
   },
 };

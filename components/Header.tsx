@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type Note = {
   id: string;
@@ -37,32 +38,30 @@ export function Header() {
   const unread = notes.filter((n) => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-[#070b14]/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line/80 bg-background/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="display text-xl text-white">
-          Ship<span className="text-ramen">Or</span>Skip
-          <span className="ml-1 font-mono text-[10px] tracking-widest text-muted">.lol</span>
+        <Link href="/" className="display text-xl text-foreground">
+          ShipOrSkip
+          <span className="ml-1 bg-accent px-1 font-mono text-[10px] tracking-normal text-accent-fg">.lol</span>
         </Link>
-        <nav className="hidden items-center gap-5 text-sm text-muted sm:flex">
-          <Link href="/deck" className="hover:text-white">
-            Deck
+        <nav className="flex items-center gap-4 text-sm text-muted sm:gap-5">
+          <Link href="/deck" className="hover:text-foreground">
+            Swipe
           </Link>
-          <Link href="/leaderboard" className="hover:text-white">
+          <Link href="/leaderboard" className="hover:text-foreground">
             Ladder
           </Link>
-          <Link href="/submit" className="hover:text-white">
-            Claim rank
-          </Link>
-          <Link href="/watchlist" className="hover:text-white">
-            Watchlist
-          </Link>
-          <Link href="/arena" className="hover:text-white">
-            Arena
+          <Link href="/about" className="hover:text-foreground">
+            About
           </Link>
         </nav>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {session?.user ? (
             <>
+              <Link href="/watchlist" className="hidden text-sm text-muted hover:text-foreground sm:inline">
+                Watchlist
+              </Link>
               <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
@@ -70,14 +69,14 @@ export function Header() {
               >
                 Pings
                 {unread > 0 ? (
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-ramen px-1 text-[10px] text-black">
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] text-accent-fg">
                     {unread}
                   </span>
                 ) : null}
               </button>
               <Link
                 href={`/u/${session.user.username}`}
-                className="hidden text-sm text-white sm:inline"
+                className="hidden text-sm text-foreground sm:inline"
               >
                 @{session.user.username}
               </Link>
@@ -95,7 +94,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => signIn()}
-              className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-black"
+              className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-fg"
             >
               Sign in
             </button>
@@ -115,7 +114,7 @@ export function Header() {
                   {note.counterBidUrl ? (
                     <a
                       href={note.counterBidUrl}
-                      className="mt-1 inline-block text-xs text-ramen underline"
+                      className="mt-1 inline-block text-xs underline"
                     >
                       1-click counter-bid
                     </a>

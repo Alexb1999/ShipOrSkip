@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getRankedApps } from "@/lib/ranking";
 import { formatMrr } from "@/lib/tiers";
+import { IndieRoast } from "@/components/IndieRoast";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +15,18 @@ export default async function ArenaPage() {
       <p className="mt-2 text-sm text-muted">Two apps. One winner. Go swipe if you want the real physics.</p>
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         {pair.map((app) => (
-          <Link key={app.id} href={`/u/${app.user.username}`} className="rounded-3xl border border-line bg-card p-6">
-            <p className="font-mono text-xs text-muted">@{app.user.username}</p>
+          <Link key={app.id} href={`/u/${app.user.username}`} className="rounded-3xl border bg-card p-6" style={{ borderColor: `${app.tier.color}66` }}>
+            <p className="font-mono text-xs" style={{ color: app.tier.color }}>
+              {app.tier.label}
+            </p>
             <h2 className="display text-4xl">{app.name}</h2>
             <p className="mt-2 text-sm">{app.tagline}</p>
             <p className="mt-4 font-mono text-xs text-muted">
-              {app.tier.label} · {formatMrr(app.mrrAmount)} · {app.eloScore} ELO · {app.delusionLabel}
+              @{app.user.username} · {formatMrr(app.mrrAmount)} · {app.eloScore} ELO
             </p>
+            <div className="mt-4">
+              <IndieRoast slug={app.tier.slug} seed={app.user.username} compact />
+            </div>
           </Link>
         ))}
       </div>

@@ -26,7 +26,7 @@ export default async function WatchlistPage() {
             <Link
               key={row.id}
               href={`/u/${row.app.user.username}`}
-              className="block rounded-2xl border border-line bg-card p-4 hover:border-white/30"
+              className="block rounded-2xl border border-line bg-card p-4 hover:border-foreground/30"
             >
               <p className="font-semibold">{row.app.name}</p>
               <p className="text-sm text-muted">

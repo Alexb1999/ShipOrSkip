@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { LeaderboardTier } from "@/components/LeaderboardTier";
 import { BiddingModalGate } from "@/components/BiddingModalGate";
 import { getAllSpotlights } from "@/lib/economy";
-import { getRankedApps } from "@/lib/ranking";
+import { appsByTierElo, getRankedApps } from "@/lib/ranking";
 import { GLOBAL_TOP_SLOT, TIERS, formatMrr } from "@/lib/tiers";
 import { prisma } from "@/lib/db";
 
@@ -24,16 +24,13 @@ export default async function LeaderboardPage({
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10">
       <div>
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted">Satirical MRR ladder</p>
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted">ELO ladder · each rank is its own board</p>
         <h1 className="display text-6xl">The tiers of cope</h1>
       </div>
 
       {global ? (
-        <div
-          className="overflow-hidden rounded-3xl border p-6"
-          style={{ borderColor: global.app ? "#fbbf24" : "#334155" }}
-        >
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-rich">Global header hijack</p>
+        <div className="overflow-hidden rounded-3xl border border-line bg-card p-6">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">Global header hijack</p>
           <p className="display text-4xl">
             {global.app.name} owns the skyline for ${global.effectiveAmount}
           </p>
@@ -59,7 +56,7 @@ export default async function LeaderboardPage({
       ) : null}
 
       {params.paid ? (
-        <p className="rounded-xl border border-surviving/40 bg-surviving/10 px-4 py-2 text-sm text-surviving">
+        <p className="rounded-xl border border-line bg-accent px-4 py-2 text-sm text-accent-fg">
           Payment captured ({params.paid}). Rank incoming.
         </p>
       ) : null}
@@ -68,7 +65,7 @@ export default async function LeaderboardPage({
         <LeaderboardTier
           key={tier.slug}
           tier={tier}
-          apps={ranked.filter((a) => a.tier.slug === tier.slug)}
+          apps={appsByTierElo(ranked, tier.slug)}
           spotlight={
             spotlights.get(tier.slug)
               ? {

@@ -3,6 +3,7 @@
 import type { RankedApp } from "@/lib/ranking";
 import { formatMrr } from "@/lib/tiers";
 import { TierChip } from "@/components/TierBadge";
+import { IndieRoast } from "@/components/IndieRoast";
 
 export function SwipeCard({
   app,
@@ -13,20 +14,15 @@ export function SwipeCard({
 }) {
   return (
     <article
-      className="absolute inset-0 overflow-hidden rounded-3xl border border-white/10 bg-card shadow-2xl"
+      className="absolute inset-0 overflow-hidden rounded-3xl border border-line bg-card shadow-sm"
       style={{
         transform: `scale(${1 - offset * 0.04}) translateY(${offset * 12}px)`,
         zIndex: 10 - offset,
       }}
     >
-      <div
-        className="h-56 bg-cover bg-center"
-        style={{
-          backgroundImage: app.screenshotUrl
-            ? `linear-gradient(to top, #0f172a, transparent 45%), url(${app.screenshotUrl})`
-            : `linear-gradient(135deg, ${app.tier.accent}, ${app.tier.color})`,
-        }}
-      />
+      <div className="relative h-40 bg-line bg-cover bg-center" style={{ backgroundImage: app.screenshotUrl ? `url(${app.screenshotUrl})` : undefined }}>
+        <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+      </div>
       <div className="space-y-3 p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -40,26 +36,27 @@ export function SwipeCard({
             <img
               src={app.user.avatarUrl}
               alt=""
-              className="h-12 w-12 rounded-full border border-white/20 bg-black"
+              className="h-12 w-12 rounded-full border border-line bg-line"
             />
           ) : null}
         </div>
-        <p className="text-sm text-slate-200">{app.tagline}</p>
+        <p className="text-sm">{app.tagline}</p>
         <div className="flex flex-wrap gap-2">
           <TierChip tier={app.tier} verified={app.isVerified} compact />
           <span className="rounded-full border border-line px-2 py-0.5 font-mono text-[10px] text-muted">
             {formatMrr(app.mrrAmount)} MRR
           </span>
           <span className="rounded-full border border-line px-2 py-0.5 font-mono text-[10px] text-muted">
-            {app.eloScore} ELO · #{app.globalRank}
+            {app.eloScore} ELO · #{app.tierRank} {app.tier.label}
           </span>
-          <span className="rounded-full border border-fym/40 bg-fym/10 px-2 py-0.5 font-mono text-[10px] text-fym">
+          <span className="rounded-full border border-line bg-accent px-2 py-0.5 font-mono text-[10px] text-accent-fg">
             {app.delusionLabel}
           </span>
         </div>
+        <IndieRoast slug={app.tier.slug} seed={app.id} compact />
         <div className="flex flex-wrap gap-1">
           {app.techStack.map((tag) => (
-            <span key={tag} className="rounded bg-white/5 px-2 py-0.5 font-mono text-[10px] text-muted">
+            <span key={tag} className="rounded bg-background px-2 py-0.5 font-mono text-[10px] text-muted">
               {tag}
             </span>
           ))}

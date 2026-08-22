@@ -38,7 +38,7 @@ export function CallBsModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "var(--overlay)" }}>
       <div className="w-full max-w-md rounded-2xl border border-line bg-card p-5">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Call BS</p>
         <h2 className="display mt-1 text-3xl">Stake $10 on @{founder}</h2>
@@ -46,7 +46,7 @@ export function CallBsModal({
           48-hour clock. If they Stripe-verify, you lose the stake (80% to founder, 20% house). If they
           don&apos;t, they drop to Homeless for 14 days and you get the $10 back.
         </p>
-        {error ? <p className="mt-2 text-sm text-rose-400">{error}</p> : null}
+        {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
         <div className="mt-4 flex gap-2">
           <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-line py-2 text-sm">
             Cancel
@@ -55,7 +55,7 @@ export function CallBsModal({
             type="button"
             disabled={busy}
             onClick={stake}
-            className="flex-1 rounded-lg bg-fym px-3 py-2 text-sm font-semibold text-black disabled:opacity-50"
+            className="flex-1 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-fg disabled:opacity-50"
           >
             {busy ? "Staking…" : "Stake $10"}
           </button>

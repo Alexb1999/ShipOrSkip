@@ -1,18 +1,31 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #070b14;
-  --foreground: #e8eefc;
-  --muted: #94a3b8;
-  --card: #0f172a;
-  --line: #1e293b;
-  --homeless: #9ca3af;
-  --ramen: #f97316;
-  --surviving: #22c55e;
-  --replacing: #3b82f6;
-  --rich: #fbbf24;
-  --fym: #c084fc;
-  --billionaire: #fb7185;
+  color-scheme: light;
+  --background: #f3efe6;
+  --foreground: #111111;
+  --muted: #6f6a63;
+  --card: #faf7f1;
+  --line: #ddd6cc;
+  --accent: #c6f03c;
+  --accent-fg: #111111;
+  --danger: #b42318;
+  --overlay: rgb(17 17 17 / 0.45);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #0c0c0c;
+  --foreground: #f3f1ec;
+  --muted: #9a958c;
+  --card: #161616;
+  --line: #2c2c2c;
+  --accent: #c6f03c;
+  --accent-fg: #111111;
+  --danger: #ff8a80;
+  --overlay: rgb(0 0 0 / 0.7);
 }
 
 @theme inline {
@@ -21,13 +34,9 @@
   --color-muted: var(--muted);
   --color-card: var(--card);
   --color-line: var(--line);
-  --color-homeless: var(--homeless);
-  --color-ramen: var(--ramen);
-  --color-surviving: var(--surviving);
-  --color-replacing: var(--replacing);
-  --color-rich: var(--rich);
-  --color-fym: var(--fym);
-  --color-billionaire: var(--billionaire);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-ibm);
   --font-display: var(--font-display);
@@ -45,24 +54,16 @@ body {
 
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
-  background-image:
-    radial-gradient(1200px 500px at 10% -10%, rgba(59, 130, 246, 0.16), transparent 50%),
-    radial-gradient(900px 400px at 90% 0%, rgba(192, 132, 252, 0.12), transparent 45%),
-    linear-gradient(#070b14, #070b14);
   min-height: 100%;
 }
 
 .display {
   font-family: var(--font-display), Impact, sans-serif;
   letter-spacing: -0.04em;
-  text-transform: uppercase;
 }
 
-.cardboard {
-  background:
-    repeating-linear-gradient(
-      45deg,
-      #3f3f46 0 8px,
-      #52525b 8px 16px
-    );
+button,
+a,
+input {
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
 }

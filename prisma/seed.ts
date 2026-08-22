@@ -174,7 +174,7 @@ const SEED: SeedApp[] = [
     tagline: "Launch in stealth until your mom notices.",
     websiteUrl: "https://softlaunch.example",
     techStack: ["Laravel", "Tailwind"],
-    mrr: 6400,
+    mrr: 12500,
     elo: 1320,
   },
   {
@@ -198,7 +198,7 @@ const SEED: SeedApp[] = [
     tagline: "Kubernetes for people who just needed a VPS.",
     websiteUrl: "https://cloudclown.example",
     techStack: ["K8s", "Terraform", "Tears"],
-    mrr: 28000,
+    mrr: 18000,
     elo: 1480,
     verified: true,
   },

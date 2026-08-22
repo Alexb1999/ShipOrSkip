@@ -39,14 +39,14 @@ export function ProfileActions({
 
   return (
     <div className="flex flex-wrap gap-2">
-      <a href={intent} target="_blank" rel="noreferrer" className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
+      <a href={intent} target="_blank" rel="noreferrer" className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-fg">
         Flex on X
       </a>
       <button type="button" onClick={copy} className="rounded-full border border-line px-4 py-2 text-sm">
         {copied ? "Copied" : "Copy share link"}
       </button>
       {mine && !verified ? (
-        <button type="button" onClick={verify} className="rounded-full border border-sky-400/40 px-4 py-2 text-sm text-sky-300">
+        <button type="button" onClick={verify} className="rounded-full border border-line px-4 py-2 text-sm">
           Get Verified Legend · $19
         </button>
       ) : null}

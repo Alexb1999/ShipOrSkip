@@ -26,6 +26,7 @@ export type RankedApp = {
   };
   tier: Tier;
   globalRank: number;
+  tierRank: number;
   eloRank: number;
   mrrRank: number;
   delusionRatio: number;
@@ -37,6 +38,14 @@ type AppWithUser = App & { user: User };
 function effectiveMrr(app: App): number {
   if (app.homelessUntil && app.homelessUntil.getTime() > Date.now()) return 0;
   return toNumber(app.mrrAmount);
+}
+
+export function compareTierElo(a: RankedApp, b: RankedApp): number {
+  return b.eloScore - a.eloScore || b.mrrAmount - a.mrrAmount || a.name.localeCompare(b.name);
+}
+
+export function appsByTierElo(apps: RankedApp[], slug: string): RankedApp[] {
+  return apps.filter((app) => app.tier.slug === slug).sort(compareTierElo);
 }
 
 export function rankApps(apps: AppWithUser[]): RankedApp[] {
@@ -76,8 +85,22 @@ export function rankApps(apps: AppWithUser[]): RankedApp[] {
       mrrRank: mr,
       delusionRatio: delusionRatio(mr, er),
       delusionLabel: delusionLabel({ mrr, mrrRank: mr, eloRank: er, total }),
+      tierRank: 0,
     };
   });
+
+  const byTier = new Map<string, RankedApp[]>();
+  for (const app of ranked) {
+    const list = byTier.get(app.tier.slug) ?? [];
+    list.push(app);
+    byTier.set(app.tier.slug, list);
+  }
+  for (const list of byTier.values()) {
+    list.sort(compareTierElo);
+    list.forEach((app, i) => {
+      app.tierRank = i + 1;
+    });
+  }
 
   ranked.sort((a, b) => a.globalRank - b.globalRank);
   return ranked;

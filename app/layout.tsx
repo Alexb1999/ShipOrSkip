@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Archivo_Black, Geist, IBM_Plex_Mono } from "next/font/google";
+import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { LiveStatsBar } from "@/components/LiveStatsBar";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 
@@ -37,12 +39,22 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${display.variable} ${ibm.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`,
+          }}
+        />
+      </head>
+      <body className="flex min-h-full flex-col bg-background text-foreground">
         <Providers>
           <Header />
+          <LiveStatsBar />
           <main className="flex-1">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>

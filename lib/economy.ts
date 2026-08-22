@@ -3,7 +3,7 @@ import { bidExpiresAt, effectiveBidAmount } from "@/lib/bids";
 import { applyElo, DEFAULT_ELO, ELO_K, SUPER_SHIP_K } from "@/lib/elo";
 import { toNumber } from "@/lib/money";
 import { appUrl } from "@/lib/ranking";
-import { GLOBAL_TOP_SLOT } from "@/lib/tiers";
+import { formatTierSlot } from "@/lib/tiers";
 import type { PaymentKind } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
@@ -161,10 +161,7 @@ export async function fulfillOutbid(args: {
       where: { id: previous.id },
       data: { status: "outbid" },
     });
-    const slot =
-      args.targetTier === GLOBAL_TOP_SLOT
-        ? "the global header banner"
-        : `the ${args.targetTier.replaceAll("_", " ")} tier`;
+    const slot = formatTierSlot(args.targetTier);
     await prisma.notification.create({
       data: {
         userId: previous.app.userId,

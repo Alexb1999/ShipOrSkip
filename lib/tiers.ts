@@ -1,8 +1,9 @@
 export type TierSlug =
   | "homeless"
+  | "pity_purchase"
   | "ramen"
-  | "surviving"
-  | "replacing_9_5"
+  | "still_9_5"
+  | "no_more_9_5"
   | "rich_af"
   | "fuck_you_money"
   | "billionaire_path";
@@ -28,28 +29,37 @@ export const TIERS: Tier[] = [
     theme: "Grey / cardboard / monospace",
   },
   {
+    slug: "pity_purchase",
+    label: "Pity Purchase",
+    minMrr: 1,
+    maxMrr: 999,
+    color: "#EAB308",
+    accent: "#A16207",
+    theme: "Sickly gold / one Stripe notification",
+  },
+  {
     slug: "ramen",
     label: "Ramen & Noodles",
-    minMrr: 1,
-    maxMrr: 1000,
+    minMrr: 1000,
+    maxMrr: 5000,
     color: "#F97316",
     accent: "#C2410C",
     theme: "Orange / warm noodle",
   },
   {
-    slug: "surviving",
-    label: "Surviving",
-    minMrr: 1001,
-    maxMrr: 5000,
+    slug: "still_9_5",
+    label: "Still 9-5",
+    minMrr: 5001,
+    maxMrr: 9999,
     color: "#22C55E",
     accent: "#15803D",
-    theme: "Green / basic utility",
+    theme: "Olive drab / you can almost quit",
   },
   {
-    slug: "replacing_9_5",
-    label: "Replacing 9-5",
-    minMrr: 5001,
-    maxMrr: 10000,
+    slug: "no_more_9_5",
+    label: "No More 9-5",
+    minMrr: 10000,
+    maxMrr: 25000,
     color: "#3B82F6",
     accent: "#1D4ED8",
     theme: "Electric blue / badge of freedom",
@@ -57,7 +67,7 @@ export const TIERS: Tier[] = [
   {
     slug: "rich_af",
     label: "Rich AF",
-    minMrr: 10001,
+    minMrr: 25001,
     maxMrr: 100000,
     color: "#FBBF24",
     accent: "#D97706",
@@ -74,11 +84,11 @@ export const TIERS: Tier[] = [
   },
   {
     slug: "billionaire_path",
-    label: "Billionaire Path",
+    label: "Tech Oligarch",
     minMrr: 500001,
     maxMrr: null,
-    color: "#FB7185",
-    accent: "#F43F5E",
+    color: "#C6F03C",
+    accent: "#84A318",
     theme: "Holographic / fire",
   },
 ];
@@ -101,8 +111,17 @@ export function mrrToTier(
   return TIERS[TIERS.length - 1];
 }
 
+const LEGACY_SLUGS: Record<string, TierSlug> = {
+  american_peasant: "still_9_5",
+};
+
+export function resolveTierSlug(slug: string): TierSlug {
+  return LEGACY_SLUGS[slug] ?? (TIERS.some((t) => t.slug === slug) ? (slug as TierSlug) : "homeless");
+}
+
 export function getTierBySlug(slug: string): Tier | undefined {
-  return TIERS.find((t) => t.slug === slug);
+  const resolved = LEGACY_SLUGS[slug] ?? slug;
+  return TIERS.find((t) => t.slug === resolved);
 }
 
 export function formatMrr(amount: number): string {
@@ -114,3 +133,8 @@ export function formatMrr(amount: number): string {
 }
 
 export const GLOBAL_TOP_SLOT = "global_top";
+
+export function formatTierSlot(slot: string): string {
+  if (slot === GLOBAL_TOP_SLOT) return "global banner";
+  return getTierBySlug(slot)?.label ?? slot.replaceAll("_", " ");
+}

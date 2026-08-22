@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { GLOBAL_TOP_SLOT, type TierSlug } from "@/lib/tiers";
+import { GLOBAL_TOP_SLOT, formatTierSlot, type TierSlug } from "@/lib/tiers";
 import { minNextBid, MIN_BID } from "@/lib/bids";
 
 export function BiddingModal({
@@ -49,12 +49,12 @@ export function BiddingModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "var(--overlay)" }}>
       <div className="w-full max-w-md rounded-2xl border border-line bg-card p-5 shadow-2xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Outbid / hijack</p>
         <h2 className="display mt-1 text-3xl">Pay to steal the spot</h2>
         <p className="mt-2 text-sm text-muted">
-          Min ${min}. Boosts shed 20% every 24h. Hold the {targetTier.replaceAll("_", " ")} spotlight.
+          Min ${min}. Boosts shed 20% every 24h. Hold the {formatTierSlot(targetTier)} spotlight.
         </p>
         <label className="mt-4 block text-xs text-muted">Bid amount (USD)</label>
         <input
@@ -64,7 +64,7 @@ export function BiddingModal({
           onChange={(e) => setAmount(e.target.value)}
           className="mt-1 w-full rounded-lg border border-line bg-background px-3 py-2"
         />
-        {error ? <p className="mt-2 text-sm text-rose-400">{error}</p> : null}
+        {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
         <div className="mt-4 flex gap-2">
           <button
             type="button"
@@ -77,7 +77,7 @@ export function BiddingModal({
             type="button"
             disabled={busy}
             onClick={pay}
-            className="flex-1 rounded-lg bg-ramen px-3 py-2 text-sm font-semibold text-black disabled:opacity-50"
+            className="flex-1 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-fg disabled:opacity-50"
           >
             {busy ? "Opening…" : "Checkout"}
           </button>

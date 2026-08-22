@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IndieRoast } from "@/components/IndieRoast";
+import { TierChip } from "@/components/TierBadge";
+import { mrrToTier } from "@/lib/tiers";
 
 type Fields = {
   name: string;
@@ -89,8 +92,12 @@ export function SubmitForm({ initial }: { initial: Fields | null }) {
         Self-reported MRR (USD)
         <input type="number" min={0} className="mt-1 w-full rounded-lg border border-line bg-card px-3 py-2" {...field("mrrAmount")} />
       </label>
-      {error ? <p className="text-sm text-rose-400">{error}</p> : null}
-      <button disabled={busy} className="w-full rounded-xl bg-white py-3 font-semibold text-black disabled:opacity-50">
+      <div className="space-y-2 rounded-2xl border border-line p-3">
+        <TierChip tier={mrrToTier(form.mrrAmount)} />
+        <IndieRoast slug={mrrToTier(form.mrrAmount).slug} seed={form.name} compact />
+      </div>
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
+      <button disabled={busy} className="w-full rounded-xl bg-accent py-3 font-semibold text-accent-fg disabled:opacity-50">
         {busy ? "Saving…" : "Lock in the flex"}
       </button>
     </form>

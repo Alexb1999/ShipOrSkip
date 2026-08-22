@@ -86,7 +86,7 @@ export function DeckEngine({
   if (!current) {
     return (
       <div className="rounded-3xl border border-dashed border-line p-10 text-center">
-        <p className="display text-4xl">Deck empty</p>
+        <p className="display text-4xl">Nothing left to swipe</p>
         <p className="mt-2 text-muted">You judged the whole indie internet. Touch grass, then refresh.</p>
       </div>
     );
@@ -94,7 +94,7 @@ export function DeckEngine({
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="relative h-[560px]">
+      <div className="relative h-[640px]">
         {upcoming
           .map((app, i) => <SwipeCard key={app.id} app={app} offset={upcoming.length - i} />)
           .reverse()}
@@ -117,21 +117,21 @@ export function DeckEngine({
         <button
           type="button"
           onClick={() => vote("skip")}
-          className="rounded-2xl border border-line py-3 text-sm font-semibold text-rose-300"
+          className="rounded-2xl border border-line py-3 text-sm font-semibold"
         >
           Skip
         </button>
         <button
           type="button"
           onClick={() => vote("super_ship")}
-          className="rounded-2xl bg-gradient-to-r from-fym to-billionaire py-3 text-sm font-semibold text-black"
+          className="rounded-2xl bg-foreground py-3 text-sm font-semibold text-background"
         >
           Super $15
         </button>
         <button
           type="button"
           onClick={() => vote("ship")}
-          className="rounded-2xl bg-surviving py-3 text-sm font-semibold text-black"
+          className="rounded-2xl bg-accent py-3 text-sm font-semibold text-accent-fg"
         >
           Ship
         </button>
@@ -139,7 +139,7 @@ export function DeckEngine({
       <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-widest text-muted">
         ← skip · → ship · ↑ super ship
       </p>
-      {toast ? <p className="mt-3 text-center text-sm text-slate-200">{toast}</p> : null}
+      {toast ? <p className="mt-3 text-center text-sm">{toast}</p> : null}
     </div>
   );
 }

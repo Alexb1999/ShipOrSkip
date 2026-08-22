@@ -23,7 +23,7 @@ export function BiddingModalGate({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-full bg-ramen px-4 py-2 text-sm font-semibold text-black"
+        className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-fg"
       >
         {label}
       </button>

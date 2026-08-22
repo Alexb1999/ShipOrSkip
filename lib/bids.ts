@@ -1,5 +1,5 @@
 export const MIN_BID = 10;
-export const BID_TTL_HOURS = 24 * 7;
+export const BID_TTL_HOURS = 24;
 export const DAILY_DECAY = 0.8;
 
 export function effectiveBidAmount(

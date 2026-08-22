@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { expireStaleBids, resolveExpiredChallenges } from "@/lib/economy";
 
-export async function GET(req: Request) {
+function cronSecretFrom(req: Request) {
   const url = new URL(req.url);
-  const secret = url.searchParams.get("secret") ?? req.headers.get("x-cron-secret");
-  if (secret !== process.env.CRON_SECRET) {
+  const auth = req.headers.get("authorization");
+  const bearer = auth?.startsWith("Bearer ") ? auth.slice(7) : null;
+  return url.searchParams.get("secret") ?? req.headers.get("x-cron-secret") ?? bearer;
+}
+
+export async function GET(req: Request) {
+  const secret = cronSecretFrom(req);
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   await expireStaleBids();

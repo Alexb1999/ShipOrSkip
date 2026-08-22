@@ -15,7 +15,7 @@ export function LoginButtons({
         <button
           type="button"
           onClick={() => signIn("twitter", { redirectTo: next })}
-          className="w-full rounded-xl bg-white py-3 font-semibold text-black"
+          className="w-full rounded-xl bg-accent py-3 font-semibold text-accent-fg"
         >
           Continue with X
         </button>
