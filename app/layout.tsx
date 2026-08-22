@@ -29,7 +29,11 @@ export const metadata: Metadata = {
   openGraph: { type: "website", siteName: "ShipOrSkip.lol" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="en"

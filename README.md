@@ -5,9 +5,11 @@ Viral, satirical indie-hacker discovery: MRR tiers, a Tinder-style Ship/Skip dec
 ## Run locally
 
 ```bash
-cp .env.example .env   # already created for local docker
-docker compose up -d
-npx prisma migrate dev --name init
+cp .env.example .env
+# Postgres: Docker Desktop, or Homebrew `brew services start postgresql@15`
+# then: createuser -s shiporskip && createdb -O shiporskip shiporskip
+docker compose up -d   # if Docker is running
+npx prisma migrate dev
 npm run db:seed
 npm run dev
 ```
