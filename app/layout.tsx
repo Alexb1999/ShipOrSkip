@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { LiveStatsBar } from "@/components/LiveStatsBar";
 import { Providers } from "@/components/Providers";
+import { appUrl } from "@/lib/ranking";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,7 +29,7 @@ const ibm = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "ShipOrSkip.lol",
   description: "Satirical MRR ladder. Swipe indie apps. Outbid your rivals. Call BS on fake revenue.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(appUrl()),
   twitter: { card: "summary_large_image" },
   openGraph: { type: "website", siteName: "ShipOrSkip.lol" },
 };
