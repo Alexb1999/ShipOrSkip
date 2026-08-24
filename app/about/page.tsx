@@ -42,10 +42,20 @@ export default async function AboutPage() {
         roasted. Swipe Ship or Skip. Pay to hijack the ladder.
       </p>
       <p className="mt-4 text-muted">
-        No ads. No feed algorithm. Rank is hype, cash, and whoever is willing to outbid you.
+        No ads. No feed algorithm. Rank is hype, cash, and whoever is willing to outbid you. X login is
+        identity. TrustMRR is how MRR gets a checkmark. Paying $19 never counted.
       </p>
 
-      <h2 className="display mt-12 text-3xl">Then it went live</h2>
+      <h2 className="display mt-12 text-3xl">How MRR gets real</h2>
+      <p className="mt-3 text-muted">
+        Claim whatever number you want. That&apos;s a costume. To get{" "}
+        <span className="font-mono text-foreground">✓ TrustMRR</span>, paste your{" "}
+        <a href="https://trustmrr.com" className="underline" target="_blank" rel="noreferrer">
+          TrustMRR
+        </a>{" "}
+        profile. We pull live MRR from their Stripe (or Lemon, Paddle, etc.) connection. If someone Calls
+        BS, you have 48 hours to do that or you go Homeless.
+      </p>
       <p className="mt-3 text-muted">The site launched on {launched}.</p>
 
       <div id="stats" className="mt-8 grid gap-3 sm:grid-cols-3">

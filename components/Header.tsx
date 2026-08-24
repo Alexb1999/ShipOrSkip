@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -91,13 +91,12 @@ export function Header() {
           ) : status === "loading" ? (
             <span className="text-xs text-muted">…</span>
           ) : (
-            <button
-              type="button"
-              onClick={() => signIn()}
+            <Link
+              href="/login"
               className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-fg"
             >
               Sign in
-            </button>
+            </Link>
           )}
         </div>
       </div>

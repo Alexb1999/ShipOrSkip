@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     : "CLAIM YOUR RANK";
   const mrr = app ? formatMrr(app.mrrAmount) : "$0";
   const handle = app ? `@${app.user.username}` : "@you";
-  const badge = app?.isVerified ? "VERIFIED VIA STRIPE" : "UNVERIFIED FLEX";
+  const badge = app?.isVerified ? "VERIFIED VIA TRUSTMRR" : "UNVERIFIED FLEX";
   const elo = app ? `${app.eloScore.toLocaleString()} ELO` : "1200 ELO";
   const lime = "#C6F03C";
   const tint = app?.tier.color ?? lime;

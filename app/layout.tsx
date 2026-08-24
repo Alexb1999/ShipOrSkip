@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo_Black, Geist, IBM_Plex_Mono } from "next/font/google";
+import Script from "next/script";
+import { auth } from "@/auth";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { LiveStatsBar } from "@/components/LiveStatsBar";
@@ -31,26 +33,23 @@ export const metadata: Metadata = {
   openGraph: { type: "website", siteName: "ShipOrSkip.lol" },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html
       lang="en"
       suppressHydrationWarning
       className={`${geistSans.variable} ${display.variable} ${ibm.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`,
-          }}
-        />
-      </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <Providers>
+        <Script id="theme-boot" strategy="beforeInteractive">
+          {`try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`}
+        </Script>
+        <Providers session={session}>
           <Header />
           <LiveStatsBar />
           <main className="flex-1">{children}</main>

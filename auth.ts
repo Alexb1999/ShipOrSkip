@@ -36,12 +36,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       id: "demo",
       name: "Demo",
-      credentials: {},
+      credentials: {
+        intent: { label: "Intent", type: "text" },
+      },
       async authorize() {
         const user = await upsertDemoUser();
         return {
           id: user.id,
           name: user.name,
+          email: "demo@shiporskip.local",
           image: user.avatarUrl,
           username: user.username,
         };
@@ -87,11 +90,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = String(token.id ?? "");
-        session.user.username = String(token.username ?? "anon");
-        session.user.image = (token.picture as string | undefined) ?? session.user.image;
+      if (!session.user) return session;
+      if (!token.id) {
+        session.user.id = "";
+        session.user.username = "";
+        return session;
       }
+      session.user.id = String(token.id);
+      session.user.username = String(token.username ?? "anon");
+      session.user.image = (token.picture as string | undefined) ?? session.user.image;
       return session;
     },
   },

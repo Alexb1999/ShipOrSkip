@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
+import { prisma } from "@/lib/db";
 import { TierChip } from "@/components/TierBadge";
 import { ProfileActions } from "@/components/ProfileActions";
 import { IndieRoast } from "@/components/IndieRoast";
@@ -39,6 +40,12 @@ export default async function ProfilePage({
   if (!app) notFound();
   const share = `${appUrl()}/u/${app.user.username}`;
   const mine = session?.user?.id === app.user.id;
+  const pendingBs = mine
+    ? await prisma.challenge.findFirst({
+        where: { targetAppId: app.id, status: "pending" },
+        select: { expiresAt: true },
+      })
+    : null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
@@ -86,7 +93,8 @@ export default async function ProfilePage({
             tweetText={`I'm RANK #${app.tierRank}: ${app.tier.label} (${app.eloScore} ELO) on shiporskip.lol`}
             mine={mine}
             verified={app.isVerified}
-            username={app.user.username}
+            challenged={Boolean(pendingBs)}
+            trustMrrUrl={app.trustMrrUrl}
           />
           <Link href="/deck" className="block text-sm text-muted underline">
             Swipe the rest of the deck

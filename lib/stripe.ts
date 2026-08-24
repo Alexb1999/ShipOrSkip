@@ -52,7 +52,7 @@ export async function startCheckout(args: {
                   ? "Super Ship"
                   : args.kind === "call_bs"
                     ? "Call BS stake"
-                    : "Stripe MRR verification",
+                    : "Payment",
           },
         },
       },

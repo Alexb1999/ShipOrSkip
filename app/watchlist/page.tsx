@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function WatchlistPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login?next=/watchlist");
+  if (!session?.user?.id) redirect("/login?from=/watchlist");
   const rows = await prisma.watchlist.findMany({
     where: { userId: session.user.id },
     include: { app: { include: { user: true } } },

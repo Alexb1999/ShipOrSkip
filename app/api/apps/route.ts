@@ -24,6 +24,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Name, tagline, and website are required" }, { status: 400 });
   }
 
+  const existing = await prisma.app.findUnique({ where: { userId: session.user.id } });
+  const mrrChanged = existing ? Number(existing.mrrAmount) !== mrrAmount : false;
+  const siteChanged = existing ? existing.websiteUrl !== websiteUrl : false;
+  const dropProof = mrrChanged || siteChanged;
+
   const app = await prisma.app.upsert({
     where: { userId: session.user.id },
     update: {
@@ -34,7 +39,15 @@ export async function POST(req: Request) {
       screenshotUrl,
       techStack,
       mrrAmount: new Prisma.Decimal(mrrAmount),
-      isVerified: false,
+      ...(dropProof
+        ? {
+            isVerified: false,
+            trustMrrSlug: null,
+            trustMrrUrl: null,
+            verifiedMrr: null,
+            verifiedAt: null,
+          }
+        : {}),
     },
     create: {
       userId: session.user.id,

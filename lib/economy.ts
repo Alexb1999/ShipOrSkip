@@ -3,7 +3,8 @@ import { bidExpiresAt, effectiveBidAmount } from "@/lib/bids";
 import { applyElo, DEFAULT_ELO, ELO_K, SUPER_SHIP_K } from "@/lib/elo";
 import { toNumber } from "@/lib/money";
 import { appUrl } from "@/lib/ranking";
-import { formatTierSlot } from "@/lib/tiers";
+import { formatTierSlot, mrrToTier, TIERS } from "@/lib/tiers";
+import type { TrustMrrProfile } from "@/lib/trustmrr";
 import type { PaymentKind } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
@@ -125,7 +126,7 @@ export async function fulfillPayment(paymentId: string) {
   }
 
   if (payment.kind === "verify") {
-    await verifyFounder(payment.userId);
+    // $19 never proved MRR. TrustMRR is the only verify path now.
   }
 
   return prisma.payment.findUnique({ where: { id: paymentId } });
@@ -173,39 +174,85 @@ export async function fulfillOutbid(args: {
   }
 }
 
-export async function verifyFounder(userId: string) {
-  const app = await prisma.app.findUnique({ where: { userId } });
-  if (!app) throw new Error("Submit an app before verifying MRR.");
+function tierIndex(mrr: number) {
+  const slug = mrrToTier(mrr).slug;
+  return TIERS.findIndex((t) => t.slug === slug);
+}
+
+export async function verifyWithTrustMrr(userId: string, proof: TrustMrrProfile) {
+  const app = await prisma.app.findUnique({ where: { userId }, include: { user: true } });
+  if (!app) throw new Error("Claim a rank before verifying MRR.");
+
+  const taken = await prisma.app.findFirst({
+    where: { trustMrrSlug: proof.slug, NOT: { id: app.id } },
+    select: { id: true },
+  });
+  if (taken) throw new Error("That TrustMRR profile is already linked to another listing.");
+
+  const claimedMrr = toNumber(app.mrrAmount);
+  const inflated = tierIndex(proof.mrr) < tierIndex(claimedMrr);
 
   await prisma.app.update({
     where: { id: app.id },
-    data: { isVerified: true, homelessUntil: null },
+    data: {
+      mrrAmount: new Prisma.Decimal(proof.mrr),
+      isVerified: true,
+      homelessUntil: null,
+      trustMrrSlug: proof.slug,
+      trustMrrUrl: proof.url,
+      verifiedMrr: new Prisma.Decimal(proof.mrr),
+      verifiedAt: new Date(),
+    },
   });
 
   const pending = await prisma.challenge.findMany({
     where: { targetAppId: app.id, status: "pending" },
   });
+  const handle = app.user.username;
 
   for (const challenge of pending) {
-    await prisma.challenge.update({
-      where: { id: challenge.id },
-      data: { status: "verified_success" },
-    });
-    await prisma.notification.create({
-      data: {
-        userId: challenge.challengerId,
-        title: "Call BS failed",
-        body: `@${(await prisma.user.findUnique({ where: { id: userId } }))?.username ?? "founder"} verified via Stripe. Your $10 stake goes to them (80/20 split). They are now a Verified Legend.`,
-      },
-    });
-    await prisma.notification.create({
-      data: {
-        userId,
-        title: "Verified Legend",
-        body: "Stripe verification succeeded. You kept the rank and collected the Call BS stake.",
-      },
-    });
+    if (inflated) {
+      await prisma.challenge.update({
+        where: { id: challenge.id },
+        data: { status: "failed_unverified" },
+      });
+      await prisma.notification.create({
+        data: {
+          userId: challenge.challengerId,
+          title: "Call BS landed",
+          body: `@${handle} linked TrustMRR, but the live MRR is a lower rank than they claimed. Stake comes back. They stay listed at the real number.`,
+        },
+      });
+      await prisma.notification.create({
+        data: {
+          userId,
+          title: "TrustMRR caught the flex",
+          body: `Verified at $${Math.round(proof.mrr)} MRR via TrustMRR — below the rank you claimed. Call BS stands. You're still listed at the real number.`,
+        },
+      });
+    } else {
+      await prisma.challenge.update({
+        where: { id: challenge.id },
+        data: { status: "verified_success" },
+      });
+      await prisma.notification.create({
+        data: {
+          userId: challenge.challengerId,
+          title: "Call BS failed",
+          body: `@${handle} proved $${Math.round(proof.mrr)} MRR on TrustMRR. Your $10 stake goes to them (80/20 split).`,
+        },
+      });
+      await prisma.notification.create({
+        data: {
+          userId,
+          title: "Verified via TrustMRR",
+          body: "TrustMRR matched your rank. You kept the listing and collected the Call BS stake.",
+        },
+      });
+    }
   }
+
+  return { inflated, mrr: proof.mrr, slug: proof.slug };
 }
 
 export async function resolveExpiredChallenges(now = new Date()) {
@@ -230,14 +277,14 @@ export async function resolveExpiredChallenges(now = new Date()) {
       data: {
         userId: challenge.targetApp.userId,
         title: "Rank drop: Homeless",
-        body: `@${challenge.challenger.username} called BS and you didn't verify in 48h. You're Homeless for 14 days.`,
+        body: `@${challenge.challenger.username} called BS and you didn't paste a TrustMRR profile in 48h. You're Homeless for 14 days.`,
       },
     });
     await prisma.notification.create({
       data: {
         userId: challenge.challengerId,
         title: "Call BS landed",
-        body: `@${challenge.targetApp.user.username} failed to verify. You get your $10 back plus bonus hype.`,
+        body: `@${challenge.targetApp.user.username} didn't prove MRR on TrustMRR. You get your $10 back plus bonus hype.`,
       },
     });
   }

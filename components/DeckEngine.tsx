@@ -27,7 +27,7 @@ export function DeckEngine({
     async (direction: Direction) => {
       if (!current || busy) return;
       if (!signedIn) {
-        router.push("/login");
+        router.push("/login?from=/deck");
         return;
       }
       if (direction === "super_ship") {

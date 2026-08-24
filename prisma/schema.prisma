@@ -67,6 +67,10 @@ model App {
   techStack             String[]
   mrrAmount             Decimal     @default(0) @db.Decimal(10, 2)
   isVerified            Boolean     @default(false)
+  trustMrrSlug          String?     @unique
+  trustMrrUrl           String?
+  verifiedMrr           Decimal?    @db.Decimal(10, 2)
+  verifiedAt            DateTime?
   eloScore              Int         @default(1200)
   homelessUntil         DateTime?
   superShipUntil        DateTime?

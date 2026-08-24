@@ -43,8 +43,9 @@ export function CallBsModal({
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Call BS</p>
         <h2 className="display mt-1 text-3xl">Stake $10 on @{founder}</h2>
         <p className="mt-2 text-sm text-muted">
-          48-hour clock. If they Stripe-verify, you lose the stake (80% to founder, 20% house). If they
-          don&apos;t, they drop to Homeless for 14 days and you get the $10 back.
+          48-hour clock. They have to paste a TrustMRR profile. If the live MRR matches the rank, you lose
+          the stake (80% founder / 20% house). If they ghost or the number is a lower rank, you get the $10
+          back and they eat it.
         </p>
         {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
         <div className="mt-4 flex gap-2">

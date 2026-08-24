@@ -36,7 +36,7 @@ export function TierChip({
     >
       <RankBadge tier={tier} size={compact ? 16 : 18} />
       {tier.label}
-      {verified ? <span className="text-[10px] opacity-80">✓ Verified</span> : null}
+      {verified ? <span className="text-[10px] opacity-80">✓ TrustMRR</span> : null}
     </span>
   );
 }

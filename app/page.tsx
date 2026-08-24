@@ -43,7 +43,7 @@ export default async function HomePage() {
         Pay to stay #1.
       </h1>
       <p className="mt-6 max-w-xl text-lg text-muted">
-        Self-report MRR. Get a meme rank. Swipe the rest — or pay to stay #1.
+        Self-report MRR. Get a meme rank. Swipe the rest — or pay to stay #1. TrustMRR if you want the checkmark.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Link href="/submit" className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-accent-fg">

@@ -95,7 +95,7 @@ export function LeaderboardTier({
                 <span className="font-mono text-xs text-muted">{formatMrr(app.mrrAmount)}</span>
                 {app.isVerified ? (
                   <span className="rounded-full border border-line px-2 py-0.5 font-mono text-[10px] text-muted">
-                    VERIFIED
+                    TRUSTMRR
                   </span>
                 ) : (
                   <button

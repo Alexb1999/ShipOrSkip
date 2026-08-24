@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { minNextBid, MIN_BID } from "@/lib/bids";
 import { getSpotlight } from "@/lib/economy";
-import { CALL_BS_PRICE, startCheckout, SUPER_SHIP_PRICE, VERIFY_PRICE } from "@/lib/stripe";
+import { CALL_BS_PRICE, startCheckout, SUPER_SHIP_PRICE } from "@/lib/stripe";
 import type { PaymentKind } from "@prisma/client";
 
 export async function POST(req: Request) {
@@ -19,7 +19,12 @@ export async function POST(req: Request) {
 
   if (kind === "super_ship") amount = SUPER_SHIP_PRICE;
   if (kind === "call_bs") amount = CALL_BS_PRICE;
-  if (kind === "verify") amount = VERIFY_PRICE;
+  if (kind === "verify") {
+    return NextResponse.json(
+      { error: "MRR is verified with a TrustMRR URL, not a card. POST /api/verify." },
+      { status: 400 },
+    );
+  }
 
   if (kind === "outbid") {
     if (!appId || !targetTier) {
@@ -47,7 +52,7 @@ export async function POST(req: Request) {
       amount,
       appId,
       targetTier,
-      successPath: kind === "super_ship" ? "/deck" : kind === "verify" ? `/u/${session.user.username}` : "/leaderboard",
+      successPath: kind === "super_ship" ? "/deck" : "/leaderboard",
     });
     return NextResponse.json(checkout);
   } catch (e) {

@@ -23,6 +23,7 @@ Open [http://localhost:3000](http://localhost:3000). Sign in with **Continue as 
 | `AUTH_TWITTER_ID` / `AUTH_TWITTER_SECRET` | Real X OAuth |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Real Checkout. If unset, payments fulfill instantly in demo mode |
 | `CRON_SECRET` | `GET /api/cron?secret=...` expires bids and unresolved Call BS challenges |
+| `TRUSTMRR_API_KEY` | Optional. Public TrustMRR pages work without it. Official API is used if set. |
 
 ## Loop
 
@@ -30,4 +31,4 @@ Open [http://localhost:3000](http://localhost:3000). Sign in with **Continue as 
 2. Share `/u/{username}` (Twitter card via `/api/og`)
 3. Rivals swipe Ship/Skip (ELO) or outbid a tier/header slot
 4. Dethrone pings show in the header; 1-click counter-bid
-5. Call BS ($10, 48h). Verify via Stripe (or mock in dev) or drop to Homeless for 14 days
+5. Call BS ($10, 48h). Prove it with a TrustMRR URL or drop to Homeless for 14 days

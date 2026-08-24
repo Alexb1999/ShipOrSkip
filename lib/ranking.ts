@@ -14,6 +14,8 @@ export type RankedApp = {
   techStack: string[];
   mrrAmount: number;
   isVerified: boolean;
+  trustMrrSlug: string | null;
+  trustMrrUrl: string | null;
   eloScore: number;
   homelessUntil: Date | null;
   superShipUntil: Date | null;
@@ -69,6 +71,8 @@ export function rankApps(apps: AppWithUser[]): RankedApp[] {
       techStack: app.techStack,
       mrrAmount: mrr,
       isVerified: app.isVerified,
+      trustMrrSlug: app.trustMrrSlug,
+      trustMrrUrl: app.trustMrrUrl,
       eloScore: app.eloScore,
       homelessUntil: app.homelessUntil,
       superShipUntil: app.superShipUntil,
