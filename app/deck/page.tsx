@@ -33,7 +33,7 @@ export default async function DeckPage() {
         Ship or Skip
       </p>
       <h1 className="display mb-8 text-center text-5xl">Judge the indie internet</h1>
-      <DeckEngine initialDeck={deck} signedIn={Boolean(session?.user)} />
+      <DeckEngine initialDeck={deck} signedIn={Boolean(session?.user?.id)} />
     </div>
   );
 }

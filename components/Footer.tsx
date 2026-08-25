@@ -9,9 +9,17 @@ export function Footer() {
           <span className="text-foreground">.lol</span>
           {" · "}parody. Not affiliated with anyone on this site.
         </p>
-        <Link href="/about" className="hover:text-foreground">
-          About
-        </Link>
+        <nav className="flex flex-wrap gap-x-3 gap-y-1">
+          <Link href="/about" className="hover:text-foreground">
+            About
+          </Link>
+          <Link href="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
+          <Link href="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>
+        </nav>
       </div>
     </footer>
   );

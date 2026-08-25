@@ -2,10 +2,12 @@ import NextAuth from "next-auth";
 import Twitter from "next-auth/providers/twitter";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
+import { demoLoginEnabled } from "@/lib/flags";
 
 const twitterConfigured = Boolean(
   process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET,
 );
+const demoEnabled = demoLoginEnabled();
 
 async function upsertDemoUser() {
   return prisma.user.upsert({
@@ -33,23 +35,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }),
         ]
       : []),
-    Credentials({
-      id: "demo",
-      name: "Demo",
-      credentials: {
-        intent: { label: "Intent", type: "text" },
-      },
-      async authorize() {
-        const user = await upsertDemoUser();
-        return {
-          id: user.id,
-          name: user.name,
-          email: "demo@shiporskip.local",
-          image: user.avatarUrl,
-          username: user.username,
-        };
-      },
-    }),
+    ...(demoEnabled
+      ? [
+          Credentials({
+            id: "demo",
+            name: "Demo",
+            credentials: {
+              intent: { label: "Intent", type: "text" },
+            },
+            async authorize() {
+              const user = await upsertDemoUser();
+              return {
+                id: user.id,
+                name: user.name,
+                email: "demo@shiporskip.local",
+                image: user.avatarUrl,
+                username: user.username,
+              };
+            },
+          }),
+        ]
+      : []),
   ],
   callbacks: {
     async jwt({ token, user, profile, account }) {
@@ -105,3 +111,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 });
 
 export const twitterAuthEnabled = twitterConfigured;
+export const demoAuthEnabled = demoEnabled;

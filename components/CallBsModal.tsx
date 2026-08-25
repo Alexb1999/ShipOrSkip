@@ -45,7 +45,11 @@ export function CallBsModal({
         <p className="mt-2 text-sm text-muted">
           48-hour clock. They have to paste a TrustMRR profile. If the live MRR matches the rank, you lose
           the stake (80% founder / 20% house). If they ghost or the number is a lower rank, you get the $10
-          back and they eat it.
+          back and they eat it.{" "}
+          <a href="/terms#payments" className="underline">
+            Rules
+          </a>
+          .
         </p>
         {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
         <div className="mt-4 flex gap-2">

@@ -56,6 +56,10 @@ export default async function AboutPage() {
         profile. We pull live MRR from their Stripe (or Lemon, Paddle, etc.) connection. If someone Calls
         BS, you have 48 hours to do that or you go Homeless.
       </p>
+      <p className="mt-3 text-muted">
+        Super Ship is $15: 10× ELO, 24h at the front of the swipe deck, +500 impressions. You&apos;re buying
+        a megaphone, not a checkmark.
+      </p>
       <p className="mt-3 text-muted">The site launched on {launched}.</p>
 
       <div id="stats" className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -116,6 +120,14 @@ export default async function AboutPage() {
         <span>·</span>
         <Link href="/about#stats" className="hover:text-foreground">
           Live stats
+        </Link>
+        <span>·</span>
+        <Link href="/terms" className="hover:text-foreground">
+          Terms
+        </Link>
+        <span>·</span>
+        <Link href="/privacy" className="hover:text-foreground">
+          Privacy
         </Link>
       </footer>
     </div>

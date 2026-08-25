@@ -3,6 +3,7 @@
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn, signOut } from "@/auth";
+import { demoLoginEnabled } from "@/lib/flags";
 
 function safeFrom(value: FormDataEntryValue | string | null | undefined) {
   const path = String(value ?? "/deck");
@@ -12,6 +13,9 @@ function safeFrom(value: FormDataEntryValue | string | null | undefined) {
 
 export async function demoSignIn(formData: FormData) {
   const from = safeFrom(formData.get("from"));
+  if (!demoLoginEnabled()) {
+    redirect(`/login?from=${encodeURIComponent(from)}&error=demo-off`);
+  }
   try {
     await signIn("demo", { intent: "play", redirectTo: from });
   } catch (error) {

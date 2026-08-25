@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth, twitterAuthEnabled } from "@/auth";
+import { auth, demoAuthEnabled, twitterAuthEnabled } from "@/auth";
 import { LoginButtons } from "@/components/LoginButtons";
 import { signOutAction } from "@/app/login/actions";
 
@@ -43,9 +43,18 @@ export default async function LoginPage({
     <div className="mx-auto max-w-md px-4 py-20 text-center">
       <h1 className="display text-5xl">Sign in to swipe</h1>
       <p className="mt-3 text-sm text-muted">
-        Demo gets you into the deck, ladder, and claim flow right now. X is optional until you add API keys.
+        {demoAuthEnabled
+          ? "Demo gets you into the deck, ladder, and claim flow. X is optional until you add API keys."
+          : twitterAuthEnabled
+            ? "X is identity. That's your name on the ladder."
+            : "Nobody can sign in until X keys are set. Demo is off in production."}
       </p>
-      <LoginButtons from={from} twitterEnabled={twitterAuthEnabled} error={params.error} />
+      <LoginButtons
+        from={from}
+        twitterEnabled={twitterAuthEnabled}
+        demoEnabled={demoAuthEnabled}
+        error={params.error}
+      />
     </div>
   );
 }

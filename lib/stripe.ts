@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { appUrl } from "@/lib/ranking";
 import { createPendingPayment, fulfillPayment } from "@/lib/economy";
+import { demoPaymentsEnabled } from "@/lib/flags";
 import { prisma } from "@/lib/db";
 import type { PaymentKind } from "@prisma/client";
 
@@ -22,8 +23,12 @@ export async function startCheckout(args: {
   targetTier?: string;
   successPath?: string;
 }): Promise<{ url: string; demo: boolean }> {
-  const payment = await createPendingPayment(args);
   const stripe = stripeClient();
+  if (!stripe && !demoPaymentsEnabled()) {
+    throw new Error("Stripe isn't configured. Can't take money in production.");
+  }
+
+  const payment = await createPendingPayment(args);
   const origin = appUrl();
   const success = `${origin}${args.successPath ?? "/leaderboard"}?paid=${args.kind}`;
   const cancel = `${origin}${args.successPath ?? "/leaderboard"}?canceled=1`;

@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { useRouter } from "next/navigation";
 import type { RankedApp } from "@/lib/ranking";
 import { SwipeCard } from "@/components/SwipeCard";
-import { useRouter } from "next/navigation";
+import { SuperShipModal } from "@/components/SuperShipModal";
 
 type Direction = "ship" | "skip" | "super_ship";
 
@@ -19,26 +20,44 @@ export function DeckEngine({
   const [deck, setDeck] = useState(initialDeck);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [confirmSuper, setConfirmSuper] = useState(false);
+  const [superError, setSuperError] = useState<string | null>(null);
 
   const current = deck[0];
   const upcoming = deck.slice(1, 3);
+
+  const goLogin = useCallback(() => {
+    router.push("/login?from=/deck");
+  }, [router]);
+
+  const requestSuper = useCallback(() => {
+    if (!signedIn) {
+      goLogin();
+      return;
+    }
+    setSuperError(null);
+    setConfirmSuper(true);
+  }, [goLogin, signedIn]);
 
   const vote = useCallback(
     async (direction: Direction) => {
       if (!current || busy) return;
       if (!signedIn) {
-        router.push("/login?from=/deck");
+        goLogin();
         return;
       }
       if (direction === "super_ship") {
+        setBusy(true);
+        setSuperError(null);
         const res = await fetch("/api/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ kind: "super_ship", appId: current.id, amount: 15 }),
         });
         const data = await res.json();
+        setBusy(false);
         if (!res.ok) {
-          setToast(data.error ?? "Super Ship failed");
+          setSuperError(data.error ?? "Super Ship failed");
           return;
         }
         router.push(data.url);
@@ -64,23 +83,30 @@ export function DeckEngine({
       );
       setDeck((d) => d.slice(1));
     },
-    [busy, current, router, signedIn],
+    [busy, current, goLogin, router, signedIn],
   );
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (confirmSuper) {
+        if (e.key === "Escape") {
+          setConfirmSuper(false);
+          setSuperError(null);
+        }
+        return;
+      }
       if (e.key === "ArrowRight") vote("ship");
       if (e.key === "ArrowLeft") vote("skip");
-      if (e.key === "ArrowUp") vote("super_ship");
+      if (e.key === "ArrowUp") requestSuper();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [vote]);
+  }, [vote, confirmSuper, requestSuper]);
 
   function onDragEnd(_: unknown, info: PanInfo) {
     if (info.offset.x > 140 || info.velocity.x > 800) vote("ship");
     else if (info.offset.x < -140 || info.velocity.x < -800) vote("skip");
-    else if (info.offset.y < -140) vote("super_ship");
+    else if (info.offset.y < -140) requestSuper();
   }
 
   if (!current) {
@@ -123,7 +149,7 @@ export function DeckEngine({
         </button>
         <button
           type="button"
-          onClick={() => vote("super_ship")}
+          onClick={requestSuper}
           className="rounded-2xl bg-foreground py-3 text-sm font-semibold text-background"
         >
           Super $15
@@ -137,9 +163,21 @@ export function DeckEngine({
         </button>
       </div>
       <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-widest text-muted">
-        ← skip · → ship · ↑ super ship
+        Super $15 · 10× ELO · 24h front of deck · +500 impressions
       </p>
       {toast ? <p className="mt-3 text-center text-sm">{toast}</p> : null}
+      {confirmSuper ? (
+        <SuperShipModal
+          appName={current.name}
+          busy={busy}
+          error={superError}
+          onClose={() => {
+            setConfirmSuper(false);
+            setSuperError(null);
+          }}
+          onConfirm={() => vote("super_ship")}
+        />
+      ) : null}
     </div>
   );
 }

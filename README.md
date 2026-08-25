@@ -14,16 +14,18 @@ npm run db:seed
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Sign in with **Continue as demo** (Twitter/X is optional).
+Open [http://localhost:3000](http://localhost:3000). Sign in with **Continue as demo** (Twitter/X is optional). Demo login and free checkout are **off in production** unless you set `ALLOW_DEMO_LOGIN` / `ALLOW_DEMO_PAYMENTS`.
 
 ## Optional keys
 
 | Env | Why |
 |---|---|
-| `AUTH_TWITTER_ID` / `AUTH_TWITTER_SECRET` | Real X OAuth |
-| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Real Checkout. If unset, payments fulfill instantly in demo mode |
+| `AUTH_TWITTER_ID` / `AUTH_TWITTER_SECRET` | Real X OAuth. Required on production (demo login is off). |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Real Checkout. Locally, payments fulfill instantly if unset. Production refuses checkout without a key. Webhook: `/api/webhooks/stripe` |
 | `CRON_SECRET` | `GET /api/cron?secret=...` expires bids and unresolved Call BS challenges |
 | `TRUSTMRR_API_KEY` | Optional. Public TrustMRR pages work without it. Official API is used if set. |
+| `ALLOW_DEMO_LOGIN` | `true` to keep `@demo_hacker` on a staging deploy |
+| `ALLOW_DEMO_PAYMENTS` | `true` to allow instant unpaid checkout on staging |
 
 ## Loop
 
@@ -32,3 +34,4 @@ Open [http://localhost:3000](http://localhost:3000). Sign in with **Continue as 
 3. Rivals swipe Ship/Skip (ELO) or outbid a tier/header slot
 4. Dethrone pings show in the header; 1-click counter-bid
 5. Call BS ($10, 48h). Prove it with a TrustMRR URL or drop to Homeless for 14 days
+6. Super Ship ($15): 10× ELO, 24h front of deck, +500 impressions
