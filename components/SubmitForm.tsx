@@ -22,7 +22,7 @@ export function SubmitForm({ initial }: { initial: Fields | null }) {
     initial ?? {
       name: "",
       tagline: "",
-      websiteUrl: "https://",
+      websiteUrl: "",
       pitchVideoUrl: "",
       screenshotUrl: "",
       techStack: "Next.js, Postgres",
@@ -74,7 +74,12 @@ export function SubmitForm({ initial }: { initial: Fields | null }) {
       </label>
       <label className="block text-xs text-muted">
         Website
-        <input required className="mt-1 w-full rounded-lg border border-line bg-card px-3 py-2" {...field("websiteUrl")} />
+        <input
+          required
+          placeholder="yourapp.com"
+          className="mt-1 w-full rounded-lg border border-line bg-card px-3 py-2"
+          {...field("websiteUrl")}
+        />
       </label>
       <label className="block text-xs text-muted">
         Pitch video URL (Loom / YouTube embed)

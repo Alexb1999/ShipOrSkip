@@ -11,7 +11,10 @@ export async function POST(req: Request) {
   const body = await req.json();
   const name = String(body.name ?? "").trim();
   const tagline = String(body.tagline ?? "").trim();
-  const websiteUrl = String(body.websiteUrl ?? "").trim();
+  let websiteUrl = String(body.websiteUrl ?? "").trim();
+  if (websiteUrl && !/^https?:\/\//i.test(websiteUrl)) {
+    websiteUrl = `https://${websiteUrl}`;
+  }
   const pitchVideoUrl = String(body.pitchVideoUrl ?? "").trim() || null;
   const screenshotUrl = String(body.screenshotUrl ?? "").trim() || null;
   const techStack = String(body.techStack ?? "")
