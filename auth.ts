@@ -87,7 +87,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.name = dbUser.name;
       }
 
-      if (user?.id) {
+      if (user?.id && account?.provider !== "twitter") {
         token.id = user.id;
         const username = (user as { username?: string }).username;
         if (username) token.username = username;
