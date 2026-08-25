@@ -19,7 +19,7 @@ export function LiveStatsBar() {
       setStats(await res.json());
     }
     ping();
-    const id = setInterval(ping, 20000);
+    const id = setInterval(ping, 45000);
     return () => {
       cancelled = true;
       clearInterval(id);

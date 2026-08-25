@@ -28,7 +28,7 @@ export function Header() {
       setNotes(await res.json());
     };
     load();
-    const id = setInterval(load, 8000);
+    const id = setInterval(load, 20000);
     return () => {
       cancelled = true;
       clearInterval(id);
