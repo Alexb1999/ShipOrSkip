@@ -8,6 +8,16 @@ export async function POST(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Sign in to swipe" }, { status: 401 });
   }
+  const me = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true },
+  });
+  if (!me) {
+    return NextResponse.json(
+      { error: "Session expired. Sign out and back in." },
+      { status: 401 },
+    );
+  }
   const body = await req.json();
   const appId = String(body.appId ?? "");
   const direction = body.direction as "ship" | "skip" | "super_ship";
