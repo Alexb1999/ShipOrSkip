@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { TierChip } from "@/components/TierBadge";
@@ -18,7 +17,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { username } = await params;
   const app = await getAppByUsername(username);
-  if (!app) return { title: "Not found" };
+  if (!app) {
+    return { title: "Not found", robots: { index: false } };
+  }
   const title = `RANK #${app.tierRank}: ${app.tier.label} (${app.eloScore} ELO)`;
   const og = `${appUrl()}/api/og?username=${encodeURIComponent(app.user.username)}`;
   return {
@@ -37,7 +38,40 @@ export default async function ProfilePage({
   const { username } = await params;
   const session = await auth();
   const app = await getAppByUsername(username);
-  if (!app) notFound();
+
+  if (!app) {
+    const isSelf =
+      Boolean(session?.user?.username) &&
+      session!.user!.username!.toLowerCase() === username.toLowerCase();
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-10">
+        <div className="rounded-3xl border border-line bg-card p-10 text-center">
+          <p className="font-mono text-xs text-muted">@{username}</p>
+          <h1 className="display mt-2 text-5xl">No listing yet</h1>
+          {isSelf ? (
+            <>
+              <p className="mt-3 text-muted">
+                You&apos;re signed in, but you haven&apos;t claimed your MRR rank. That&apos;s step one of
+                getting roasted.
+              </p>
+              <Link
+                href="/submit"
+                className="mt-6 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg"
+              >
+                Claim your rank
+              </Link>
+            </>
+          ) : (
+            <p className="mt-3 text-muted">Nobody has claimed this handle yet.</p>
+          )}
+          <Link href="/deck" className="mt-6 block text-sm text-muted underline">
+            Swipe the deck instead
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const share = `${appUrl()}/u/${app.user.username}`;
   const mine = session?.user?.id === app.user.id;
   const pendingBs = mine
