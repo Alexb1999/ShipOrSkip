@@ -32,6 +32,19 @@ export async function POST(req: Request) {
   const siteChanged = existing ? existing.websiteUrl !== websiteUrl : false;
   const dropProof = mrrChanged || siteChanged;
 
+  if (existing && mrrChanged) {
+    const pendingBs = await prisma.challenge.findFirst({
+      where: { targetAppId: existing.id, status: "pending" },
+      select: { id: true },
+    });
+    if (pendingBs) {
+      return NextResponse.json(
+        { error: "Your MRR is locked while a Call BS challenge is live. Prove it on TrustMRR or ride out the 48h." },
+        { status: 403 },
+      );
+    }
+  }
+
   const app = await prisma.app.upsert({
     where: { userId: session.user.id },
     update: {
