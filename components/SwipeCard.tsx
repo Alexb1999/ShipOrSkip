@@ -21,19 +21,32 @@ export function SwipeCard({
         zIndex: 10 - offset,
       }}
     >
-      <div
-        className="relative h-40 bg-line bg-cover bg-center"
+      <a
+        href={app.websiteUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="group relative block h-56 bg-line bg-cover bg-center"
         style={{ backgroundImage: `url(${appPreviewSrc(app)})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
-      </div>
+        <span className="absolute right-3 top-3 rounded-full bg-background/80 px-2.5 py-1 font-mono text-[10px] text-muted opacity-0 transition-opacity group-hover:opacity-100">
+          visit site ↗
+        </span>
+      </a>
       <div className="space-y-3 p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
               @{app.user.username}
             </p>
-            <h2 className="display text-4xl leading-none">{app.name}</h2>
+            <a
+              href={app.websiteUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="display text-4xl leading-none underline-offset-4 hover:underline"
+            >
+              {app.name}
+            </a>
           </div>
           {app.user.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element

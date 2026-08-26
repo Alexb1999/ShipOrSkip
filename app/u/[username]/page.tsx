@@ -85,10 +85,18 @@ export default async function ProfilePage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <div className="overflow-hidden rounded-3xl border border-line bg-card">
-        <div
-          className="h-48 bg-line bg-cover bg-center"
+        <a
+          href={app.websiteUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="group relative block h-56 bg-line bg-cover bg-center"
           style={{ backgroundImage: `url(${appPreviewSrc(app)})` }}
-        />
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+          <span className="absolute right-3 top-3 rounded-full bg-background/80 px-2.5 py-1 font-mono text-[10px] text-muted opacity-0 transition-opacity group-hover:opacity-100">
+            visit site ↗
+          </span>
+        </a>
         <div className="space-y-4 p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
