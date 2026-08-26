@@ -1,6 +1,7 @@
 "use client";
 
 import type { RankedApp } from "@/lib/ranking";
+import { appPreviewSrc } from "@/lib/preview";
 import { formatMrr } from "@/lib/tiers";
 import { TierChip } from "@/components/TierBadge";
 import { IndieRoast } from "@/components/IndieRoast";
@@ -20,7 +21,10 @@ export function SwipeCard({
         zIndex: 10 - offset,
       }}
     >
-      <div className="relative h-40 bg-line bg-cover bg-center" style={{ backgroundImage: app.screenshotUrl ? `url(${app.screenshotUrl})` : undefined }}>
+      <div
+        className="relative h-40 bg-line bg-cover bg-center"
+        style={{ backgroundImage: `url(${appPreviewSrc(app)})` }}
+      >
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
       </div>
       <div className="space-y-3 p-5">

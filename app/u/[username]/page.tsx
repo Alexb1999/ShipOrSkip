@@ -6,6 +6,7 @@ import { TierChip } from "@/components/TierBadge";
 import { ProfileActions } from "@/components/ProfileActions";
 import { IndieRoast } from "@/components/IndieRoast";
 import { appUrl, getAppByUsername } from "@/lib/ranking";
+import { appPreviewSrc } from "@/lib/preview";
 import { formatMrr } from "@/lib/tiers";
 
 export const dynamic = "force-dynamic";
@@ -86,11 +87,7 @@ export default async function ProfilePage({
       <div className="overflow-hidden rounded-3xl border border-line bg-card">
         <div
           className="h-48 bg-line bg-cover bg-center"
-          style={{
-            backgroundImage: app.screenshotUrl
-              ? `url(${app.screenshotUrl})`
-              : undefined,
-          }}
+          style={{ backgroundImage: `url(${appPreviewSrc(app)})` }}
         />
         <div className="space-y-4 p-6">
           <div className="flex items-start justify-between gap-4">
