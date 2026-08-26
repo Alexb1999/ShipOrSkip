@@ -27,13 +27,28 @@ export default async function DeckPage() {
       return bHot - aHot || a.globalRank - b.globalRank;
     });
 
+  const ownCount = ranked.filter((app) => app.user.id === session?.user?.id).length;
+  const judgedByMe = session?.user?.id ? swiped.size : 0;
+  const deckState =
+    deck.length > 0
+      ? null
+      : ranked.length === 0
+        ? "ghost"
+        : ownCount > 0 && ranked.length - ownCount - judgedByMe <= 0
+          ? "own"
+          : "caught-up";
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
       <p className="text-center font-mono text-xs uppercase tracking-[0.3em] text-muted">
         Ship or Skip
       </p>
       <h1 className="display mb-4 text-center text-4xl">Judge the indie internet</h1>
-      <DeckEngine initialDeck={deck} signedIn={Boolean(session?.user?.id)} />
+      <DeckEngine
+        initialDeck={deck}
+        signedIn={Boolean(session?.user?.id)}
+        deckState={deckState}
+      />
     </div>
   );
 }

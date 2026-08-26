@@ -2,10 +2,10 @@ import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-/** Session-pooler caps concurrent clients; each serverless instance gets exactly one slot. */
+/** Transaction pooler multiplexes queries; cap per-instance slots and skip prepared statements. */
 function pooledUrl(raw: string | undefined): string | undefined {
   if (!raw || /[?&]connection_limit=/.test(raw)) return raw;
-  return `${raw}${raw.includes("?") ? "&" : "?"}connection_limit=1&pool_timeout=20`;
+  return `${raw}${raw.includes("?") ? "&" : "?"}pgbouncer=true&connection_limit=2&pool_timeout=20`;
 }
 
 const datasourceUrl = pooledUrl(process.env.DATABASE_URL);

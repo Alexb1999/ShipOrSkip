@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -8,13 +9,16 @@ import { SwipeCard } from "@/components/SwipeCard";
 import { SuperShipModal } from "@/components/SuperShipModal";
 
 type Direction = "ship" | "skip" | "super_ship";
+type DeckState = "caught-up" | "own" | "ghost";
 
 export function DeckEngine({
   initialDeck,
   signedIn,
+  deckState = null,
 }: {
   initialDeck: RankedApp[];
   signedIn: boolean;
+  deckState?: DeckState | null;
 }) {
   const router = useRouter();
   const [deck, setDeck] = useState(initialDeck);
@@ -110,6 +114,47 @@ export function DeckEngine({
   }
 
   if (!current) {
+    if (deckState === "own") {
+      return (
+        <div className="rounded-3xl border border-dashed border-line p-10 text-center">
+          <p className="display text-4xl">You can&apos;t judge yourself</p>
+          <p className="mt-2 text-muted">
+            That&apos;s the one rule. Your listing is on the ladder — now get the internet to
+            show up and vote on it.
+          </p>
+          <div className="mt-6 flex justify-center gap-2">
+            <Link
+              href="/leaderboard"
+              className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-fg"
+            >
+              Run the ladder
+            </Link>
+            <Link
+              href="/submit"
+              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold"
+            >
+              Update your listing
+            </Link>
+          </div>
+        </div>
+      );
+    }
+    if (deckState === "ghost") {
+      return (
+        <div className="rounded-3xl border border-dashed border-line p-10 text-center">
+          <p className="display text-4xl">The ladder is empty</p>
+          <p className="mt-2 text-muted">
+            Somebody has to go first. Claim a rank and let the roasting begin.
+          </p>
+          <Link
+            href="/submit"
+            className="mt-6 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-fg"
+          >
+            Claim your rank
+          </Link>
+        </div>
+      );
+    }
     return (
       <div className="rounded-3xl border border-dashed border-line p-10 text-center">
         <p className="display text-4xl">Nothing left to swipe</p>
