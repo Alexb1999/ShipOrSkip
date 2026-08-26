@@ -120,7 +120,7 @@ export function DeckEngine({
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="relative h-[640px]">
+      <div className="relative h-[max(430px,min(600px,calc(100dvh-290px)))]">
         {upcoming
           .map((app, i) => <SwipeCard key={app.id} app={app} offset={upcoming.length - i} />)
           .reverse()}
@@ -139,7 +139,7 @@ export function DeckEngine({
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="mt-6 grid grid-cols-3 gap-2">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         <button
           type="button"
           onClick={() => vote("skip")}

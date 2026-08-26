@@ -25,7 +25,7 @@ export function SwipeCard({
         href={app.websiteUrl}
         target="_blank"
         rel="noreferrer"
-        className="group relative block h-56 bg-line bg-cover bg-center"
+        className="group relative block h-[36%] min-h-36 bg-line bg-cover bg-center"
         style={{ backgroundImage: `url(${appPreviewSrc(app)})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
@@ -33,7 +33,7 @@ export function SwipeCard({
           visit site ↗
         </span>
       </a>
-      <div className="space-y-3 p-5">
+      <div className="space-y-2.5 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
@@ -43,7 +43,7 @@ export function SwipeCard({
               href={app.websiteUrl}
               target="_blank"
               rel="noreferrer"
-              className="display text-4xl leading-none underline-offset-4 hover:underline"
+              className="display text-3xl leading-none underline-offset-4 hover:underline"
             >
               {app.name}
             </a>

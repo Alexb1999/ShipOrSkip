@@ -28,11 +28,11 @@ export default async function DeckPage() {
     });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-6xl px-4 py-6">
       <p className="text-center font-mono text-xs uppercase tracking-[0.3em] text-muted">
         Ship or Skip
       </p>
-      <h1 className="display mb-8 text-center text-5xl">Judge the indie internet</h1>
+      <h1 className="display mb-4 text-center text-4xl">Judge the indie internet</h1>
       <DeckEngine initialDeck={deck} signedIn={Boolean(session?.user?.id)} />
     </div>
   );
